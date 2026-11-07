@@ -13,7 +13,8 @@ import {
   FaUser,
   FaPhone,
   FaClock,
-  FaBan
+  FaBan,
+  FaRotate
 } from 'react-icons/fa6'
 
 const API_BASE_URL = 'https://courierconnect-logistics.onrender.com'
@@ -93,8 +94,10 @@ function TrackParcel() {
   const [parcel, setParcel] = useState(null)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [lastUpdated, setLastUpdated] = useState(null)
 
-  const handleTracking = useCallback(async (value) => {
+  const handleTracking = useCallback(async (value, options = {}) => {
+    const silent = options.silent === true
     const id = value.trim()
 
     if (!id) {
@@ -103,9 +106,10 @@ function TrackParcel() {
       return
     }
 
-    setLoading(true)
-    setError('')
-    setParcel(null)
+    if (!silent) {
+      setLoading(true)
+      setError('')
+    }
 
     try {
       const response = await fetch(
@@ -129,14 +133,18 @@ function TrackParcel() {
       }
 
       setParcel(data)
+      setLastUpdated(new Date())
+      if (silent) setError('')
     } catch (err) {
-      setError(
-        err.message === 'Failed to fetch'
-          ? 'Cannot connect to the server. Please check the backend.'
-          : err.message || 'Something went wrong. Please try again.'
-      )
+      if (!silent) {
+        setError(
+          err.message === 'Failed to fetch'
+            ? 'Cannot connect to the server. Please check the backend.'
+            : err.message || 'Something went wrong. Please try again.'
+        )
+      }
     } finally {
-      setLoading(false)
+      if (!silent) setLoading(false)
     }
   }, [])
 
@@ -148,6 +156,18 @@ function TrackParcel() {
       handleTracking(tracking)
     }
   }, [searchParams, handleTracking])
+
+  // Refresh the tracking record every 30 seconds while a parcel is open.
+  // This refreshes server-recorded updates; it is not GPS tracking.
+  useEffect(() => {
+    if (!parcel?.tracking_number) return undefined
+
+    const timer = window.setInterval(() => {
+      handleTracking(parcel.tracking_number, { silent: true })
+    }, 30000)
+
+    return () => window.clearInterval(timer)
+  }, [parcel?.tracking_number, handleTracking])
 
   const handleSubmit = (event) => {
     event.preventDefault()
@@ -297,6 +317,27 @@ function TrackParcel() {
 
             </div>
 
+            {/* Delivery Progress */}
+            <div className="border-b border-slate-100 px-6 py-6 md:px-8">
+              <DeliveryProgress status={normalizedStatus} />
+              <div className="mt-4 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500">
+                <span>
+                  {lastUpdated
+                    ? `Last checked: ${formatDateTime(lastUpdated)}`
+                    : 'Tracking information loaded'}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => handleTracking(parcel.tracking_number)}
+                  disabled={loading}
+                  className="inline-flex items-center gap-2 rounded-lg border border-teal-200 px-3 py-2 font-semibold text-[#0F766E] transition hover:bg-teal-50 disabled:opacity-50"
+                >
+                  <FaRotate className={loading ? 'animate-spin' : ''} />
+                  Refresh status
+                </button>
+              </div>
+            </div>
+
             {/* Parcel Information */}
             <div className="space-y-6 p-6 md:p-8">
 
@@ -422,6 +463,66 @@ function TrackParcel() {
         </div>
 
       </section>
+    </div>
+  )
+}
+
+
+// Visual progress based on the latest status recorded by an administrator.
+function DeliveryProgress({ status }) {
+  const steps = ['Pending', 'Picked Up', 'In Transit', 'Ready for Delivery', 'Delivered']
+  const currentIndex = steps.findIndex((step) => step.toLowerCase() === status)
+  const isCancelled = status === 'cancelled'
+  const progress = currentIndex < 0 ? 0 : (currentIndex / (steps.length - 1)) * 100
+
+  return (
+    <div>
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <h3 className="font-bold text-[#102A43]">Delivery Progress</h3>
+        <span className={`rounded-full px-3 py-1 text-xs font-semibold ${
+          isCancelled ? 'bg-red-50 text-red-700' : 'bg-teal-50 text-[#0F766E]'
+        }`}>
+          {isCancelled ? 'Cancelled' : `${Math.round(progress)}% complete`}
+        </span>
+      </div>
+
+      <div
+        className="h-2.5 overflow-hidden rounded-full bg-slate-100"
+        role="progressbar"
+        aria-label="Parcel delivery progress"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        aria-valuenow={isCancelled ? 0 : Math.round(progress)}
+      >
+        <div
+          className={`h-full rounded-full transition-all duration-500 ${
+            isCancelled ? 'bg-red-500' : 'bg-teal-600'
+          }`}
+          style={{ width: `${isCancelled ? 0 : progress}%` }}
+        />
+      </div>
+
+      <div className="mt-3 grid grid-cols-5 gap-1">
+        {steps.map((step, index) => (
+          <div key={step} className="text-center">
+            <div className={`mx-auto mb-2 h-2.5 w-2.5 rounded-full ${
+              !isCancelled && currentIndex >= index ? 'bg-teal-600' : 'bg-slate-200'
+            }`} />
+            <span className={`text-[10px] leading-tight sm:text-xs ${
+              !isCancelled && currentIndex >= index
+                ? 'font-semibold text-[#0F766E]'
+                : 'text-slate-400'
+            }`}>
+              {step}
+            </span>
+          </div>
+        ))}
+      </div>
+
+      <p className="mt-3 text-xs leading-5 text-slate-500">
+        Progress reflects the latest status update recorded in CourierConnect.
+        Location updates are provided by the delivery team.
+      </p>
     </div>
   )
 }

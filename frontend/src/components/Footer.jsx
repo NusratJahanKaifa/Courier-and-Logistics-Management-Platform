@@ -1,7 +1,7 @@
 
 import { Link } from 'react-router-dom'
+import Logo from './Logo'
 import {
-  FaBox,
   FaLocationDot,
   FaEnvelope,
   FaPhone,
@@ -17,16 +17,8 @@ function Footer() {
 
         {/* Brand */}
         <div>
-          <Link
-            to="/"
-            className="mb-4 inline-flex items-center gap-3 text-xl font-bold text-white"
-          >
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-600 text-white">
-              <FaBox />
-            </span>
-            <span>
-              Courier<span className="text-teal-400">Connect</span>
-            </span>
+          <Link to="/" aria-label="CourierConnect home" className="mb-4 inline-flex">
+            <Logo textClassName="text-white" />
           </Link>
 
           <p className="max-w-xs text-sm leading-7 text-slate-400">

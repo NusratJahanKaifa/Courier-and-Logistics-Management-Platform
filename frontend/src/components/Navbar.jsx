@@ -1,7 +1,8 @@
 
 import { useState, useEffect } from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
-import { FaBox, FaBars, FaXmark, FaHouse, FaMagnifyingGlass, FaGauge, FaUsers, FaPlus } from 'react-icons/fa6'
+import Logo from './Logo'
+import { FaBars, FaXmark, FaHouse, FaMagnifyingGlass, FaGauge, FaUsers, FaPlus } from 'react-icons/fa6'
 
 function Navbar() {
   const navigate = useNavigate()
@@ -65,9 +66,11 @@ function Navbar() {
           <button type="button" onClick={() => setMenuOpen(!menuOpen)} className="btn btn-ghost mr-1 text-white hover:bg-white/10 lg:hidden" aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'} aria-expanded={menuOpen}>
             {menuOpen ? <FaXmark className="text-xl" /> : <FaBars className="text-xl" />}
           </button>
-          <Link to="/" onClick={closeMenu} className="flex items-center gap-2 text-lg font-bold tracking-tight text-white md:text-xl">
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-teal-600 shadow-md"><FaBox /></span>
-            <span>Courier<span className="text-teal-400">Connect</span></span>
+          <Link to="/" onClick={closeMenu} aria-label="CourierConnect home">
+            <Logo
+              markClassName="h-9 w-9 rounded-lg"
+              textClassName="text-lg md:text-xl text-white"
+            />
           </Link>
         </div>
 
