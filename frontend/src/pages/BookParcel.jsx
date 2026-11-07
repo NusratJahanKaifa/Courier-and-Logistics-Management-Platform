@@ -89,11 +89,11 @@ function BookParcel() {
       toast.error('Receiver phone must be 7–20 characters.')
       return
     }
-
-    if (!/^[+0-9()\-\s]+$/.test(phone)) {
+    if (!/^[+0-9()\s-]+$/.test(phone)) {
       toast.error('Please enter a valid phone number.')
       return
     }
+    
 
     if (form.pickup_address.trim().length < 5 ||
         form.pickup_address.trim().length > 255) {

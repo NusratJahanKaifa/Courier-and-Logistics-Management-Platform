@@ -19,6 +19,7 @@ const STATUSES = [
   'Pending',
   'Picked Up',
   'In Transit',
+  'Ready for Delivery',
   'Delivered',
   'Cancelled'
 ]
@@ -406,6 +407,7 @@ function ParcelStatus({ status }) {
     pending: 'bg-amber-50 text-amber-700 ring-amber-200',
     'in transit': 'bg-blue-50 text-blue-700 ring-blue-200',
     'picked up': 'bg-cyan-50 text-cyan-700 ring-cyan-200',
+    'ready for delivery': 'bg-purple-50 text-purple-700 ring-purple-200',
     delivered: 'bg-emerald-50 text-emerald-700 ring-emerald-200',
     cancelled: 'bg-red-50 text-red-700 ring-red-200',
   }

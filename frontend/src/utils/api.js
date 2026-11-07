@@ -5,7 +5,6 @@ const API_BASE_URL = (
 
 export async function apiRequest(endpoint, options = {}) {
   const token = localStorage.getItem("access_token");
-
   const headers = { ...options.headers };
 
   if (token) {
@@ -23,7 +22,6 @@ export async function apiRequest(endpoint, options = {}) {
   if (response.status === 401) {
     localStorage.removeItem("access_token");
     localStorage.removeItem("user");
-
     window.dispatchEvent(new Event("auth-change"));
 
     if (window.location.pathname !== "/login") {

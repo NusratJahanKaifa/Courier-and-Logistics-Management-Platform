@@ -40,8 +40,6 @@ class ParcelCreate(BaseModel):
     delivery_address: str = Field(..., min_length=5, max_length=255)
     category: str = Field(..., min_length=2, max_length=50)
     weight: float = Field(..., gt=0)
-
-
 class ParcelUpdate(BaseModel):
     sender_name: str | None = Field(default=None, min_length=2, max_length=100)
     receiver_name: str | None = Field(default=None, min_length=2, max_length=100)
@@ -54,11 +52,15 @@ class ParcelUpdate(BaseModel):
         "Pending",
         "Picked Up",
         "In Transit",
+        "Ready for Delivery",
         "Delivered",
         "Cancelled",
     ] | None = None
-
-
+    # Status History Information
+    location: str | None = None
+    description: str | None = None
+    rider_name: str | None = None
+    rider_phone: str | None = None
 class ParcelResponse(BaseModel):
     id: int
     tracking_number: str
@@ -72,22 +74,38 @@ class ParcelResponse(BaseModel):
     status: str
     created_at: datetime
     user_id: int
-
     model_config = ConfigDict(from_attributes=True)
-
-
+class ParcelStatusHistoryCreate(BaseModel):
+    status: Literal[
+        "Pending",
+        "Picked Up",
+        "In Transit",
+        "Ready for Delivery",
+        "Delivered",
+        "Cancelled",
+    ]
+    location: str | None = None
+    description: str | None = None
+    rider_name: str | None = None
+    rider_phone: str | None = None
+class ParcelStatusHistoryResponse(BaseModel):
+    id: int
+    parcel_id: int
+    status: str
+    location: str | None = None
+    description: str | None = None
+    rider_name: str | None = None
+    rider_phone: str | None = None
+    created_at: datetime
+    model_config = ConfigDict(from_attributes=True)
 class PublicParcelTrackingResponse(BaseModel):
-    """Only non-identifying shipment details for public tracking."""
-
     tracking_number: str
     category: str
     weight: float
     status: str
     created_at: datetime
-
+    status_history: list[ParcelStatusHistoryResponse] = Field(default_factory=list)
     model_config = ConfigDict(from_attributes=True)
-
-
 class ParcelListResponse(BaseModel):
     total: int
     page: int

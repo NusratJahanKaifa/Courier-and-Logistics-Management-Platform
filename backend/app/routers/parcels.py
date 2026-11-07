@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
 from app.database import get_db
-from app.models import Parcel, User
+from app.models import Parcel, User, ParcelStatusHistory
 from app.schemas import (
     ParcelCreate,
     ParcelUpdate,
@@ -23,6 +23,7 @@ VALID_STATUSES = {
     "Pending",
     "Picked Up",
     "In Transit",
+    "Ready for Delivery",
     "Delivered",
     "Cancelled",
 }
@@ -49,17 +50,29 @@ def create_parcel(
         delivery_address=parcel_data.delivery_address,
         category=parcel_data.category,
         weight=parcel_data.weight,
+        status="Pending",
         user_id=current_user.id,
     )
 
     try:
         db.add(parcel)
+        db.flush()
+
+        history = ParcelStatusHistory(
+            parcel_id=parcel.id,
+            status="Pending",
+            location=parcel.pickup_address,
+            description="Parcel booking has been created.",
+        )
+
+        db.add(history)
         db.commit()
         db.refresh(parcel)
+
     except Exception:
         db.rollback()
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            status_code=500,
             detail="Unable to create parcel. Please try again.",
         )
 
@@ -119,7 +132,6 @@ def get_parcels(
 
     query = db.query(Parcel)
 
-    # Regular users can see only their own parcels.
     if current_user.role != "admin":
         query = query.filter(Parcel.user_id == current_user.id)
 
@@ -198,7 +210,6 @@ def track_parcel(
             detail="Parcel not found. Please check your tracking ID.",
         )
 
-    # Only fields declared in PublicParcelTrackingResponse are exposed.
     return parcel
 
 
@@ -248,16 +259,46 @@ def update_parcel(
 
     update_data = parcel_data.model_dump(exclude_unset=True)
 
-    # Only admins can update parcel status.
+    # Extract status history information
+    location = update_data.pop("location", None)
+    description = update_data.pop("description", None)
+    rider_name = update_data.pop("rider_name", None)
+    rider_phone = update_data.pop("rider_phone", None)
+
+    # Only admins can change parcel status
     if current_user.role != "admin":
         update_data.pop("status", None)
 
+    old_status = parcel.status
+    new_status = update_data.get("status")
+
+    # Update parcel information
     for field, value in update_data.items():
         setattr(parcel, field, value)
 
     try:
+        # Create history when admin changes status
+        if (
+            current_user.role == "admin"
+            and new_status is not None
+            and new_status != old_status
+        ):
+            history = ParcelStatusHistory(
+                parcel_id=parcel.id,
+                status=new_status,
+                location=location,
+                description=description or (
+                    f"Parcel status changed from {old_status} to {new_status}."
+                ),
+                rider_name=rider_name,
+                rider_phone=rider_phone,
+            )
+
+            db.add(history)
+
         db.commit()
         db.refresh(parcel)
+
     except Exception:
         db.rollback()
         raise HTTPException(
@@ -266,8 +307,6 @@ def update_parcel(
         )
 
     return parcel
-
-
 @router.delete("/{parcel_id}", status_code=204)
 def delete_parcel(
     parcel_id: int,
@@ -285,6 +324,7 @@ def delete_parcel(
     try:
         db.delete(parcel)
         db.commit()
+
     except Exception:
         db.rollback()
         raise HTTPException(

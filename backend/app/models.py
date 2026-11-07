@@ -55,6 +55,48 @@ class Parcel(Base):
 
     user = relationship("User")
 
+    # Parcel status history
+    status_history = relationship(
+        "ParcelStatusHistory",
+        back_populates="parcel",
+        cascade="all, delete-orphan",
+        order_by="ParcelStatusHistory.created_at",
+    )
+
+
+class ParcelStatusHistory(Base):
+    __tablename__ = "parcel_status_history"
+
+    id = Column(Integer, primary_key=True, index=True)
+
+    parcel_id = Column(
+        Integer,
+        ForeignKey("parcels.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+
+    status = Column(String(30), nullable=False)
+
+    location = Column(String(255), nullable=True)
+
+    description = Column(String(500), nullable=True)
+
+    rider_name = Column(String(100), nullable=True)
+
+    rider_phone = Column(String(20), nullable=True)
+
+    created_at = Column(
+        DateTime,
+        default=lambda: datetime.now(timezone.utc),
+        nullable=False,
+    )
+
+    parcel = relationship(
+        "Parcel",
+        back_populates="status_history",
+    )
+
 
 class PasswordResetToken(Base):
     __tablename__ = "password_reset_tokens"
