@@ -637,7 +637,7 @@ function AdminDashboard() {
                     })
                   }
                   placeholder="Example: Chattogram Hub"
-                  className="w-full rounded-lg border border-slate-200 p-3 outline-none focus:border-[#0F766E]"
+                  className="w-full rounded-lg border border-slate-200 bg-white p-3 text-gray-900 placeholder:text-gray-400 outline-none focus:border-[#0F766E] focus:ring-2 focus:ring-teal-100"
                 />
               </div>
 
@@ -658,7 +658,7 @@ function AdminDashboard() {
                     })
                   }
                   placeholder="Enter rider name"
-                  className="w-full rounded-lg border border-slate-200 p-3 outline-none focus:border-[#0F766E]"
+                  className="w-full rounded-lg border border-slate-200 bg-white p-3 text-gray-900 placeholder:text-gray-400 outline-none focus:border-[#0F766E] focus:ring-2 focus:ring-teal-100"
                 />
               </div>
 
@@ -679,7 +679,7 @@ function AdminDashboard() {
                     })
                   }
                   placeholder="Enter rider phone"
-                  className="w-full rounded-lg border border-slate-200 p-3 outline-none focus:border-[#0F766E]"
+                  className="w-full rounded-lg border border-slate-200 bg-white p-3 text-gray-900 placeholder:text-gray-400 outline-none focus:border-[#0F766E] focus:ring-2 focus:ring-teal-100"
                 />
               </div>
 
@@ -699,7 +699,7 @@ function AdminDashboard() {
                   }
                   placeholder="Example: Parcel arrived at Chattogram Hub."
                   rows={3}
-                  className="w-full resize-y rounded-lg border border-slate-200 p-3 outline-none focus:border-[#0F766E]"
+                  className="w-full resize-y rounded-lg border border-slate-200 bg-white p-3 text-gray-900 placeholder:text-gray-400 outline-none focus:border-[#0F766E] focus:ring-2 focus:ring-teal-100"
                 />
               </div>
             </div>
