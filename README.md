@@ -100,7 +100,7 @@ See `backend/.env.example` and `frontend/.env.example` for the required configur
 - **Frontend:** https://comforting-axolotl-d296aa.netlify.app/
 - **Backend API:** https://courierconnect-logistics.onrender.com
 - **API Documentation:** https://courierconnect-logistics.onrender.com/docs
-- **GitHub Repository:** https://github.com/NusratJahanKaifa/courierconnect-logistics
+- **GitHub Repository:** https://github.com/NusratJahanKaifa/Courier-and-Logistics-Management-Platform
 
 ## License
 
