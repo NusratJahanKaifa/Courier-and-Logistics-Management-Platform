@@ -8,6 +8,11 @@ from app.routers.auth import router as auth_router
 from app.routers.parcels import router as parcels_router
 from app.routers.users import router as users_router
 
+import secrets
+from fastapi import Header, HTTPException
+from pydantic import BaseModel, EmailStr, Field
+from app.database import SessionLocal
+from app.auth import hash_password
 Base.metadata.create_all(bind=engine)
 app = FastAPI(
     title="Courier & Logistics Management Platform",
@@ -45,3 +50,48 @@ def home():
     return {
         "message": "Courier & Logistics Management API is running"
     }
+
+class AdminRecoveryRequest(BaseModel):
+    email: EmailStr
+    new_password: str = Field(..., min_length=12, max_length=128)
+
+
+@app.post("/temporary-admin-password-reset")
+def temporary_admin_password_reset(
+    request: AdminRecoveryRequest,
+    x_admin_recovery_secret: str = Header(default=""),
+):
+    expected_secret = os.getenv("ADMIN_RECOVERY_SECRET")
+
+    if not expected_secret or not secrets.compare_digest(
+        x_admin_recovery_secret, expected_secret
+    ):
+        raise HTTPException(status_code=404, detail="Not found")
+
+    db = SessionLocal()
+
+    try:
+        email = str(request.email).strip().lower()
+
+        user = db.query(models.User).filter(
+            models.User.email == email,
+            models.User.role == "admin",
+        ).first()
+
+        if not user:
+            raise HTTPException(
+                status_code=404,
+                detail="Admin account not found",
+            )
+
+        user.hashed_password = hash_password(request.new_password)
+        db.commit()
+
+        return {"message": "Admin password updated successfully"}
+
+    except Exception:
+        db.rollback()
+        raise
+
+    finally:
+        db.close()
