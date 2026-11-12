@@ -1,17 +1,19 @@
-# CourierConnect — Courier & Logistics Management Platform
+# Parcelix — Smart Parcel & Logistics Management
 
-CourierConnect is a courier and logistics management platform built with React and FastAPI. It helps users manage parcel deliveries and provides administrators with parcel and user management features.
+Parcelix is a smart courier and logistics management platform built with **React** and **FastAPI**. It helps users book parcels, track deliveries, and manage shipments efficiently. Administrators can manage parcels and users through a dedicated dashboard.
 
 ## Features
 
 - User registration and login
 - JWT-based authentication
-- Role-based access for users and administrators
+- Role-based access control for users and administrators
 - Parcel booking and tracking
-- Parcel management
+- Parcel management (Create, Read, Update, Delete)
 - User management for administrators
 - Password reset functionality
 - Search and filtering support
+- Admin and user dashboards
+- Secure authentication and authorization
 
 ## Technology Stack
 
@@ -28,9 +30,9 @@ CourierConnect is a courier and logistics management platform built with React a
 - FastAPI
 - SQLAlchemy
 - Pydantic
-- JWT authentication
+- JWT Authentication
 - SQLite for local development
-- PostgreSQL support for production
+- PostgreSQL for production
 
 ## Project Structure
 
@@ -48,52 +50,90 @@ courier-logistics/
 └── README.md
 ```
 
-## Setup
+## Installation & Setup
 
-### Backend
+### Backend Setup
 
-1. Open a terminal in the `backend` directory.
-2. Create and activate a Python virtual environment.
-3. Install dependencies:
+1. Navigate to the backend directory:
+
+   ```bash
+   cd backend
+   ```
+
+2. Create a Python virtual environment:
+
+   ```bash
+   python -m venv venv
+   ```
+
+3. Activate the virtual environment.
+
+   **Windows (Git Bash):**
+
+   ```bash
+   source venv/Scripts/activate
+   ```
+
+   **Windows (PowerShell):**
+
+   ```powershell
+   .\venv\Scripts\Activate.ps1
+   ```
+
+4. Install dependencies:
 
    ```bash
    pip install -r requirements.txt
    ```
 
-4. Create a `.env` file based on `.env.example`.
-5. Configure the required environment variables.
-6. Start the development server:
+5. Create a `.env` file using `.env.example` as a reference.
+
+6. Configure the required environment variables.
+
+7. Start the development server:
 
    ```bash
    uvicorn app.main:app --reload
    ```
 
-API documentation: http://127.0.0.1:8000/docs
+Backend API: http://127.0.0.1:8000
 
-### Frontend
+API Documentation: http://127.0.0.1:8000/docs
 
-1. Open a terminal in the `frontend` directory.
+### Frontend Setup
+
+1. Open another terminal and navigate to the frontend directory:
+
+   ```bash
+   cd frontend
+   ```
+
 2. Install dependencies:
 
    ```bash
    npm install
    ```
 
-3. Create a `.env` file based on `.env.example`.
-4. Configure `VITE_API_BASE_URL` to point to your backend.
+3. Create a `.env` file using `.env.example` as a reference.
+
+4. Configure `VITE_API_BASE_URL` to point to your backend API.
+
 5. Start the development server:
 
    ```bash
    npm run dev
    ```
 
-The frontend will be available at http://localhost:5173.
+Frontend: http://localhost:5173
 
 ## Environment Variables
 
-See `backend/.env.example` and `frontend/.env.example` for the required configuration templates.
+Refer to the following example files for the required environment configuration:
 
-**Security:** Never commit real environment files, passwords, database credentials, or secret keys to version control.
+- `backend/.env.example`
+- `frontend/.env.example`
+
+**Security:** Never commit real environment files, passwords, database credentials, JWT secret keys, or other sensitive information to version control.
 
 ## Live Demo
 
