@@ -17,7 +17,7 @@ function Footer() {
 
         {/* Brand */}
         <div>
-          <Link to="/" aria-label="CourierConnect home" className="mb-4 inline-flex">
+          <Link to="/" aria-label="Parcelix home" className="mb-4 inline-flex">
             <Logo textClassName="text-white" />
           </Link>
 
@@ -35,37 +35,28 @@ function Footer() {
 
           <ul className="space-y-3 text-sm">
             <li>
-              <Link
-                to="/"
-                className="inline-flex items-center gap-2 transition-colors hover:text-teal-400"
-              >
+              <Link to="/" className="inline-flex items-center gap-2 transition-colors hover:text-teal-400">
                 <FaArrowRight className="text-xs text-teal-400" />
                 Home
               </Link>
             </li>
+
             <li>
-              <Link
-                to="/track"
-                className="inline-flex items-center gap-2 transition-colors hover:text-teal-400"
-              >
+              <Link to="/track" className="inline-flex items-center gap-2 transition-colors hover:text-teal-400">
                 <FaArrowRight className="text-xs text-teal-400" />
                 Track Parcel
               </Link>
             </li>
+
             <li>
-              <Link
-                to="/login"
-                className="inline-flex items-center gap-2 transition-colors hover:text-teal-400"
-              >
+              <Link to="/login" className="inline-flex items-center gap-2 transition-colors hover:text-teal-400">
                 <FaArrowRight className="text-xs text-teal-400" />
                 Login
               </Link>
             </li>
+
             <li>
-              <Link
-                to="/signup"
-                className="inline-flex items-center gap-2 transition-colors hover:text-teal-400"
-              >
+              <Link to="/signup" className="inline-flex items-center gap-2 transition-colors hover:text-teal-400">
                 <FaArrowRight className="text-xs text-teal-400" />
                 Create Account
               </Link>
@@ -110,10 +101,10 @@ function Footer() {
             <li className="flex items-start gap-3">
               <FaEnvelope className="mt-1 shrink-0 text-teal-400" />
               <a
-                href="mailto:support@courierconnect.com"
+                href="mailto:support@parcelix.com"
                 className="break-all transition-colors hover:text-teal-400"
               >
-                support@courierconnect.com
+                support@parcelix.com
               </a>
             </li>
 
@@ -129,7 +120,7 @@ function Footer() {
       <div className="border-t border-white/10">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-5 py-5 text-center text-xs text-slate-400 sm:flex-row sm:text-left lg:px-10">
           <p>
-            © {currentYear} CourierConnect. All rights reserved.
+            © {currentYear} Parcelix. All rights reserved.
           </p>
 
           <p>

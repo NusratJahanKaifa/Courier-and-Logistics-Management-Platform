@@ -12,7 +12,7 @@ function Home() {
         <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-5 py-20 md:grid-cols-2 md:px-10 md:py-28">
           <div>
             <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-teal-300/30 bg-white/10 px-4 py-2 text-sm font-semibold tracking-wide text-teal-200">
-              <FaTruckFast /> SMART COURIER & DELIVERY
+              <FaTruckFast /> PARCELIX — SMART COURIER & DELIVERY
             </p>
 
             <h1 className="text-4xl font-extrabold leading-tight tracking-tight md:text-6xl">
@@ -47,7 +47,7 @@ function Home() {
               <p className="mb-2 text-sm font-bold uppercase tracking-wider text-teal-700">Reliable Delivery</p>
               <h2 className="text-2xl font-bold md:text-3xl">Delivery made simple</h2>
               <p className="mt-3 leading-7 text-slate-600">
-                From booking to delivery, follow your parcel at every step with CourierConnect.
+                From booking to delivery, follow your parcel at every step with Parcelix.
               </p>
 
               <div className="my-6 border-t border-slate-200" />
@@ -83,7 +83,7 @@ function Home() {
         <div className="mt-14 flex flex-col items-center justify-between gap-5 rounded-2xl bg-[#102A43] p-7 text-center text-white shadow-lg sm:flex-row sm:text-left md:p-10">
           <div>
             <h2 className="text-2xl font-bold">Ready to send a parcel?</h2>
-            <p className="mt-2 text-slate-300">Start your delivery journey with CourierConnect.</p>
+            <p className="mt-2 text-slate-300">Start your delivery journey with Parcelix.</p>
           </div>
           <Link to="/track" className="btn border-none bg-teal-500 text-white hover:bg-teal-600">
             Track Your Parcel <FaArrowRight />
