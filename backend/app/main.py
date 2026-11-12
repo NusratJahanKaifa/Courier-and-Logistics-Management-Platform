@@ -1,3 +1,4 @@
+
 import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -10,11 +11,13 @@ from app.routers.users import router as users_router
 
 
 Base.metadata.create_all(bind=engine)
+
 app = FastAPI(
     title="Courier & Logistics Management Platform",
     description="API for courier and parcel management",
     version="1.0.0",
 )
+
 
 def get_allowed_origins() -> list[str]:
     origins = os.getenv(
@@ -26,7 +29,10 @@ def get_allowed_origins() -> list[str]:
         for origin in origins.split(",")
         if origin.strip()
     ]
+
+
 print("ALLOWED CORS ORIGINS:", get_allowed_origins())
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=get_allowed_origins(),
@@ -44,6 +50,5 @@ app.include_router(users_router)
 @app.get("/")
 def home():
     return {
-        "message": "Courier & Logistics Management API is running"
+        "message": "Parcelix API is running"
     }
-
